@@ -1,28 +1,29 @@
-const { GoogleGenAI } = require('@google/genai');
-
-// Initialize Gemini API
-let ai;
-if (process.env.GEMINI_API_KEY) {
-    ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-}
+// Mock aiController.js - Replaced Gemini API with dummy data
 
 exports.getCropAdvice = async (req, res) => {
     try {
         const { crop, location, season } = req.body;
-        if (!ai) {
-            return res.status(500).json({ error: 'Gemini API is not configured.' });
-        }
+        // Mock response
+        const advice = `### 🌿 ${crop} Farming Advice for ${location} (${season})
 
-        const prompt = `Act as an expert agricultural advisor for Indian farmers. The farmer is growing ${crop} in ${location} during the ${season} season. Provide actionable advice covering sowing tips, irrigation schedule, and harvesting guidance. Keep the language simple, encouraging, and clear. Format the output with clear headings.`;
+**Sowing Tips:**
+- Use high-quality, certified seeds.
+- Ensure proper spacing between rows to allow sunlight and aeration.
+- Treat seeds with organic fungicides before planting to prevent soil-borne diseases.
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
+**Irrigation Schedule:**
+- Apply first irrigation immediately after sowing if the soil is dry.
+- Provide regular irrigation every 10-15 days during the critical growth stages.
+- Avoid waterlogging in the field as it can damage the roots.
 
-        res.json({ advice: response.text });
+**Harvesting Guidance:**
+- Harvest when the crop reaches full maturity (e.g., leaves turn yellow/brown).
+- Store the harvested produce in a cool, dry place to prevent moisture and pest attacks.
+- Good luck with your farming!`;
+
+        // Simulate network delay
+        setTimeout(() => res.json({ advice }), 1500);
     } catch (error) {
-        console.error('Error getting crop advice:', error);
         res.status(500).json({ error: 'Failed to generate crop advice.' });
     }
 };
@@ -32,31 +33,22 @@ exports.detectDisease = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ error: 'No image uploaded' });
         }
-        if (!ai) {
-            return res.status(500).json({ error: 'Gemini API is not configured.' });
-        }
 
-        // Convert uploaded file to base64 for Gemini API
-        const base64Image = req.file.buffer.toString('base64');
-        
-        const prompt = 'Act as an expert plant pathologist. Analyze this image of a crop leaf. Identify any visible plant diseases. If a disease is found, state the disease name, its cause, and suggest treatment and prevention tips for a farmer. If the plant looks healthy, mention that.';
+        // Mock response
+        const analysis = `### 🔍 Disease Analysis Report
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: [
-                prompt,
-                {
-                    inlineData: {
-                        data: base64Image,
-                        mimeType: req.file.mimetype
-                    }
-                }
-            ],
-        });
+**Disease Identified:** Leaf Spot / Early Blight (Mock Detection)
 
-        res.json({ analysis: response.text });
+**Cause:** 
+This is usually caused by fungal pathogens thriving in warm and humid conditions.
+
+**Treatment & Prevention:**
+- **Organic:** Spray Neem oil mixed with mild soap water every 7 days.
+- **Chemical:** Use a copper-based fungicide or Mancozeb as per agricultural guidelines.
+- **Prevention:** Ensure proper spacing for air circulation and avoid overhead watering to keep leaves dry.`;
+
+        setTimeout(() => res.json({ analysis }), 2000);
     } catch (error) {
-        console.error('Error detecting disease:', error);
         res.status(500).json({ error: 'Failed to analyze the image.' });
     }
 };
@@ -64,20 +56,24 @@ exports.detectDisease = async (req, res) => {
 exports.getFertilizerRecommendation = async (req, res) => {
     try {
         const { crop, soilType } = req.body;
-        if (!ai) {
-            return res.status(500).json({ error: 'Gemini API is not configured.' });
-        }
 
-        const prompt = `Act as an expert agronomist. A farmer is growing ${crop} in ${soilType} soil. Provide specific fertilizer recommendations (organic and synthetic if applicable) and the ideal timing/schedule for their application. Format the output clearly.`;
+        // Mock response
+        const recommendation = `### 🌱 Fertilizer Plan for ${crop} in ${soilType} Soil
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
+**Organic Options:**
+- **Vermicompost:** Apply 2-3 tonnes per acre during soil preparation.
+- **Cow Dung Manure:** Highly effective for ${soilType} soil to improve water retention.
 
-        res.json({ recommendation: response.text });
+**Synthetic Options (NPK):**
+- Use a balanced NPK ratio (e.g., 19:19:19) depending on the exact soil test.
+- Urea: Apply in split doses (30% at sowing, 70% during vegetative growth).
+
+**Schedule:**
+1. **Basal Dose:** At the time of sowing.
+2. **Top Dressing:** 30-40 days after sowing.`;
+
+        setTimeout(() => res.json({ recommendation }), 1500);
     } catch (error) {
-        console.error('Error getting fertilizer recommendation:', error);
         res.status(500).json({ error: 'Failed to generate recommendation.' });
     }
 };
@@ -85,20 +81,24 @@ exports.getFertilizerRecommendation = async (req, res) => {
 exports.getGovernmentSchemes = async (req, res) => {
     try {
         const { state, category } = req.body;
-        if (!ai) {
-            return res.status(500).json({ error: 'Gemini API is not configured.' });
-        }
 
-        const prompt = `Act as an agricultural expert in India. Provide a list of relevant central and state government agricultural schemes, subsidies, and benefits for a farmer in ${state} who belongs to the ${category} category. Include details on benefits and required documents.`;
+        // Mock response
+        const schemes = `### 🏛️ Relevant Schemes for ${category} Farmers in ${state}
 
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
+**1. PM-KISAN (Pradhan Mantri Kisan Samman Nidhi):**
+- **Benefit:** ₹6,000 per year transferred directly to bank accounts.
+- **Documents Required:** Aadhaar Card, Land ownership papers, Bank account details.
 
-        res.json({ schemes: response.text });
+**2. PMFBY (Pradhan Mantri Fasal Bima Yojana):**
+- **Benefit:** Crop insurance against natural calamities at a very low premium.
+- **Documents Required:** Sowing certificate, Aadhaar, Bank Passbook.
+
+**3. State Subsidy on Farm Equipment:**
+- **Benefit:** Up to 40-50% subsidy on purchasing tractors and modern farm tools for ${category} category.
+- **Apply:** Contact your local Krishi Bhavan or state agriculture portal.`;
+
+        setTimeout(() => res.json({ schemes }), 1500);
     } catch (error) {
-        console.error('Error getting government schemes:', error);
         res.status(500).json({ error: 'Failed to fetch schemes.' });
     }
 };
@@ -106,20 +106,12 @@ exports.getGovernmentSchemes = async (req, res) => {
 exports.handleChat = async (req, res) => {
     try {
         const { message } = req.body;
-        if (!ai) {
-            return res.status(500).json({ error: 'Gemini API is not configured.' });
-        }
+        
+        // Mock response
+        const reply = "यह एक डेमो उत्तर है! आपने पूछा था: '" + message + "'। असली सिस्टम में यहाँ AI आपको खेती से जुड़ी एक अच्छी और सटीक सलाह देगा।";
 
-        const prompt = `You are KrishiMitra, an AI assistant for farmers. Answer the following question in Hindi. Keep your answer brief, encouraging, and easy to understand for a farmer: "${message}"`;
-
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-        });
-
-        res.json({ reply: response.text });
+        setTimeout(() => res.json({ reply }), 1000);
     } catch (error) {
-        console.error('Error handling chat:', error);
         res.status(500).json({ error: 'Failed to process chat message.' });
     }
 };
