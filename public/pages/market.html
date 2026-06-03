@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Prices - KrishiMitra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">Disease Detection</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="container py-5">
+        <h2 class="text-success fw-bold text-center mb-4">💰 Live Market Prices (Mandi)</h2>
+        <p class="text-muted text-center mb-5">Track the latest wholesale prices for different crops in your nearest mandi.</p>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Crop Name</th>
+                                        <th>State</th>
+                                        <th>Market (Mandi)</th>
+                                        <th>Min Price (₹/Quintal)</th>
+                                        <th>Max Price (₹/Quintal)</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Mock Data -->
+                                    <tr>
+                                        <td class="fw-bold">Wheat</td>
+                                        <td>Punjab</td>
+                                        <td>Ludhiana</td>
+                                        <td>2,125</td>
+                                        <td>2,250</td>
+                                        <td>Today</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Rice (Paddy)</td>
+                                        <td>Haryana</td>
+                                        <td>Karnal</td>
+                                        <td>3,000</td>
+                                        <td>3,200</td>
+                                        <td>Today</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Soybean</td>
+                                        <td>Madhya Pradesh</td>
+                                        <td>Indore</td>
+                                        <td>4,500</td>
+                                        <td>4,800</td>
+                                        <td>Today</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Cotton</td>
+                                        <td>Maharashtra</td>
+                                        <td>Amravati</td>
+                                        <td>7,000</td>
+                                        <td>7,400</td>
+                                        <td>Yesterday</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-bold">Onion</td>
+                                        <td>Maharashtra</td>
+                                        <td>Lasalgaon</td>
+                                        <td>1,200</td>
+                                        <td>1,800</td>
+                                        <td>Today</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-muted small text-center mt-3">*Note: These are estimated current prices. Actual prices may vary.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
