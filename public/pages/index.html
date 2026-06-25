@@ -1,107 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrishiMitra AI - Smart Farmer Assistant</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="../css/style.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Business Assistant – AI-powered business intelligence platform for small businesses. Analyze sales, predict inventory, and make smarter decisions." />
+  <title>AI Business Assistant – Smart Analytics for Small Businesses</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    /* Hero */
+    .hero {
+      min-height: calc(100vh - 64px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px;
+      background: rgba(124,58,237,0.1);
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--purple-light);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      animation: fadeInDown 0.6s ease;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      animation: fadeInDown 0.7s ease;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #a78bfa 0%, #67e8f9 50%, #6ee7b7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      max-width: 600px;
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeInDown 0.9s ease;
+      margin-bottom: 5rem;
+    }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap;
+      padding: 2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      backdrop-filter: blur(10px);
+      max-width: 700px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 1.75rem; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Features grid */
+    .features-section {
+      padding: 6rem 0;
+    }
+
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--cyan);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .section-desc { color: var(--text-secondary); max-width: 500px; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-slow);
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: var(--transition);
+    }
+
+    .feature-card:hover { transform: translateY(-6px); border-color: var(--border-hover); box-shadow: var(--shadow-glow); }
+    .feature-card:hover::after { transform: scaleX(1); }
+
+    .feature-icon-wrap {
+      width: 56px; height: 56px;
+      border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.7; }
+
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      color: var(--purple-light);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 1rem;
+      transition: var(--transition);
+    }
+    .feature-link:hover { gap: 8px; }
+
+    /* How it works */
+    .steps-section { padding: 5rem 0; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+      position: relative;
+    }
+
+    .step-card {
+      text-align: center;
+      padding: 2rem 1.5rem;
+    }
+
+    .step-number {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      margin: 0 auto 1rem;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+    }
+
+    .step-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step-card p { color: var(--text-secondary); font-size: 0.875rem; }
+
+    /* CTA Banner */
+    .cta-banner {
+      margin: 3rem 0;
+      padding: 4rem 2rem;
+      background: var(--gradient-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.12) 0%, transparent 70%);
+    }
+
+    .cta-banner h2 { font-size: 2rem; font-weight: 800; margin-bottom: 0.75rem; position: relative; }
+    .cta-banner p { color: var(--text-secondary); margin-bottom: 2rem; position: relative; }
+    .cta-banner .btn { position: relative; }
+
+    /* Footer */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(124,58,237,0.06); top: 10%; left: -10%; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(6,182,212,0.05); bottom: 20%; right: -5%; animation-delay: 3s; }
+    .orb-3 { width: 200px; height: 200px; background: rgba(16,185,129,0.04); top: 50%; left: 50%; animation-delay: 6s; }
+
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(20px, -20px); }
+      66% { transform: translate(-10px, 15px); }
+    }
+  </style>
 </head>
 <body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="advisor.html">Crop Advisor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="disease.html">Disease Detection</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="weather.html">Weather</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📊</div>
+      <span>AI Business Assistant</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" id="nav-home">🏠 Home</a></li>
+      <li><a href="/dashboard" id="nav-dashboard">📈 Dashboard</a></li>
+      <li><a href="/inventory" id="nav-inventory">📦 Inventory</a></li>
+      <li><a href="/chat" id="nav-chat">💬 AI Chat</a></li>
+      <li><a href="/reports" id="nav-reports">📄 Reports</a></li>
+    </ul>
+    <a href="/dashboard" class="btn btn-primary btn-sm">Get Started →</a>
+  </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section text-center text-white d-flex align-items-center justify-content-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-4">Empowering Farmers with AI</h1>
-            <p class="lead mb-5">Get instant crop advice, disease detection, weather updates, and market prices all in one place.</p>
-            <a href="dashboard.html" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-success shadow">Get Started Now</a>
+  <div class="page-wrapper">
+    <!-- Hero -->
+    <section class="hero">
+      <div style="position:relative;z-index:1;">
+        <div class="hero-eyebrow">✨ AI-Powered Business Intelligence</div>
+        <h1 class="hero-title">
+          Smarter Decisions for<br />
+          <span class="gradient-text">Small Business Success</span>
+        </h1>
+        <p class="hero-subtitle">
+          Upload your sales data and let AI analyze trends, predict inventory needs,
+          and generate actionable insights — all in plain language.
+        </p>
+        <div class="hero-cta">
+          <a href="/dashboard" class="btn btn-primary btn-lg">🚀 Start Analyzing</a>
+          <a href="/chat" class="btn btn-ghost btn-lg">💬 Ask AI a Question</a>
         </div>
+
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value">5+</div>
+            <div class="stat-label">AI Features</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">CSV/XLS</div>
+            <div class="stat-label">File Support</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">Real-time</div>
+            <div class="stat-label">AI Insights</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">Free</div>
+            <div class="stat-label">To Use</div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center fw-bold mb-5 text-success">Our Services</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                🌿
-                            </div>
-                            <h5 class="card-title fw-bold">AI Crop Advisor</h5>
-                            <p class="card-text text-muted">Get personalized advice on sowing, irrigation, and harvesting based on your crop and location.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                📸
-                            </div>
-                            <h5 class="card-title fw-bold">Disease Detection</h5>
-                            <p class="card-text text-muted">Upload a photo of your plant and our AI will identify diseases and suggest treatments.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                ⛅
-                            </div>
-                            <h5 class="card-title fw-bold">Weather Alerts</h5>
-                            <p class="card-text text-muted">Stay ahead with real-time weather updates and irrigation recommendations.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Features -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-eyebrow">⚡ Platform Features</div>
+        <h2 class="section-title">Everything You Need to<br />Run Smarter</h2>
+        <p class="section-desc">From sales analysis to inventory forecasting — powered by Gemini AI and designed for small businesses.</p>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(124,58,237,0.15);">📈</div>
+            <h3>Sales Analytics Dashboard</h3>
+            <p>Upload CSV or Excel files to instantly visualize revenue, top products, and monthly trends with beautiful charts.</p>
+            <a href="/dashboard" class="feature-link">View Dashboard →</a>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(6,182,212,0.15);">🤖</div>
+            <h3>AI Insights Engine</h3>
+            <p>Gemini AI automatically identifies patterns, growth opportunities, and risks in your sales data.</p>
+            <a href="/dashboard" class="feature-link">Get Insights →</a>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(16,185,129,0.15);">📦</div>
+            <h3>Inventory Forecasting</h3>
+            <p>Predict future stock requirements, get reorder alerts, and prevent costly overstocking or stockouts.</p>
+            <a href="/inventory" class="feature-link">Forecast Now →</a>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(245,158,11,0.15);">💬</div>
+            <h3>Business Chatbot</h3>
+            <p>Ask natural language questions like "Which product sold most last month?" and get instant AI answers.</p>
+            <a href="/chat" class="feature-link">Chat Now →</a>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(236,72,153,0.15);">📄</div>
+            <h3>Report Generation</h3>
+            <p>Generate comprehensive business reports instantly with AI-written executive summaries and action plans.</p>
+            <a href="/reports" class="feature-link">Generate Report →</a>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon-wrap" style="background:rgba(239,68,68,0.15);">🔒</div>
+            <h3>Privacy First</h3>
+            <p>Your data stays on your server. No third-party data sharing. Full control over your business information.</p>
+            <a href="/dashboard" class="feature-link">Learn More →</a>
+          </div>
         </div>
+      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2026 KrishiMitra AI. Built for Farmers.</p>
+    <!-- How it works -->
+    <section class="steps-section">
+      <div class="container">
+        <div style="text-align:center; margin-bottom:1rem;">
+          <div class="section-eyebrow">🚀 How It Works</div>
+          <h2 class="section-title">Three Steps to Smarter Business</h2>
         </div>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Upload Your Data</h3>
+            <p>Drop your CSV or Excel sales file. We support any format with product, revenue, and date columns.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>AI Analyzes Instantly</h3>
+            <p>Gemini AI processes your data, identifies trends, top performers, and hidden opportunities.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Take Action</h3>
+            <p>Get specific recommendations, forecast inventory, ask questions, and download professional reports.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Grow Your Business</h3>
+            <p>Make data-driven decisions confidently. Track progress month over month with continuous AI insights.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <div class="container">
+      <div class="cta-banner">
+        <h2>Ready to Transform Your Business?</h2>
+        <p>Upload your first sales file and get AI insights in under 30 seconds.</p>
+        <a href="/dashboard" class="btn btn-primary btn-lg">🚀 Get Started Free</a>
+      </div>
+    </div>
+
+    <footer class="container">
+      <p>© 2024 AI Business Assistant · Built with ❤️ using Gemini AI · For Small Businesses</p>
     </footer>
+  </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
+  <script src="/js/utils.js"></script>
 </body>
 </html>

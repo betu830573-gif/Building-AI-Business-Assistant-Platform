@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Report Generator – Instantly generate business reports with executive summaries, metrics tables, and recommendations." />
+  <title>Report Generator – AI Business Assistant</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .reports-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      padding-bottom: 3rem;
+    }
+
+    .config-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      position: sticky;
+      top: 80px;
+    }
+
+    .report-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .report-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .report-body {
+      padding: 2.5rem;
+      flex: 1;
+    }
+
+    .report-placeholder {
+      text-align: center;
+      padding: 6rem 2rem;
+      color: var(--text-muted);
+      margin: auto;
+    }
+
+    .report-placeholder .icon { font-size: 4rem; margin-bottom: 1.25rem; opacity: 0.4; }
+
+    /* Print styling overrides */
+    .printable-report {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      color: var(--text-primary);
+    }
+
+    .printable-report h1 {
+      font-size: 2.25rem;
+      margin-bottom: 0.5rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .printable-report h2 {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--purple-light);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .printable-report h3 {
+      font-size: 1.15rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--cyan-light);
+    }
+
+    .printable-report p {
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .printable-report ul, .printable-report ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+      color: var(--text-secondary);
+    }
+
+    .printable-report li {
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
+    }
+
+    .printable-report table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    .printable-report th {
+      background: rgba(124,58,237,0.1);
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .printable-report td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    .printable-report hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    @media print {
+      body * { visibility: hidden; background: white !important; color: black !important; }
+      .printable-report, .printable-report * { visibility: visible; }
+      .printable-report {
+        position: absolute;
+        left: 0; top: 0;
+        width: 100%;
+        padding: 0;
+        border: none;
+        background: transparent !important;
+      }
+      .printable-report h1, .printable-report h2, .printable-report h3 {
+        color: black !important;
+        -webkit-text-fill-color: initial !important;
+        background: none !important;
+      }
+      .printable-report p, .printable-report li, .printable-report td {
+        color: #333 !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .reports-layout { grid-template-columns: 1fr; }
+      .config-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📊</div>
+      <span>AI Business Assistant</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard">📈 Dashboard</a></li>
+      <li><a href="/inventory">📦 Inventory</a></li>
+      <li><a href="/chat">💬 AI Chat</a></li>
+      <li><a href="/reports" class="active">📄 Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">📄 Business Report Generator</h1>
+        <p class="page-subtitle">Generate comprehensive, executive-ready performance reports powered by Gemini AI</p>
+      </div>
+
+      <div class="reports-layout">
+        <!-- Configuration Panel -->
+        <div class="config-card">
+          <h2 class="card-title mb-3">Report Settings</h2>
+
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input class="form-input" id="businessName" placeholder="e.g. Acme Retail Solutions" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Report Type</label>
+            <select class="form-select" id="reportType">
+              <option value="Monthly Sales Performance">Monthly Sales Performance</option>
+              <option value="Quarterly Business Review">Quarterly Business Review</option>
+              <option value="Product Performance Strategy">Product Performance Strategy</option>
+              <option value="General Business Health Assessment">General Business Health Assessment</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Time Period</label>
+            <input class="form-input" id="reportPeriod" placeholder="e.g. May 2026 or Q2 2026" />
+          </div>
+
+          <button class="btn btn-primary w-full mb-2" id="generateBtn" onclick="generateReport()">🤖 Generate Report</button>
+          <p style="font-size:0.75rem; color:var(--text-muted); text-align:center; line-height:1.4;">
+            For best results, upload your sales history on the <a href="/dashboard" style="color:var(--purple-light);">Dashboard</a> first.
+          </p>
+        </div>
+
+        <!-- Report Result -->
+        <div class="report-card">
+          <div class="report-header">
+            <div class="card-title">📄 Document Viewer</div>
+            <div style="display:flex; gap:8px;" id="reportActions" style="display:none;">
+              <button class="btn btn-ghost btn-sm" onclick="printReport()" id="printBtn" disabled>🖨️ Print / PDF</button>
+              <button class="btn btn-ghost btn-sm" onclick="downloadReport()" id="downloadBtn" disabled>💾 Save Text</button>
+            </div>
+          </div>
+          <div class="report-body">
+            <div class="report-placeholder" id="reportPlaceholder">
+              <div class="icon">📄</div>
+              <p style="font-size:1rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.5rem;">Ready to generate</p>
+              <p>Configure the settings on the left and click "Generate Report" to build your custom business intelligence report.</p>
+            </div>
+
+            <div id="reportLoader" style="display:none;" class="loader-wrap" style="justify-content:center;">
+              <div class="spinner"></div>
+              <span>AI is compiling and styling your report...</span>
+            </div>
+
+            <div id="reportContainer" style="display:none;" class="printable-report md-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script>
+    let rawReportText = '';
+    let reportMetadata = null;
+
+    async function generateReport() {
+      const btn = document.getElementById('generateBtn');
+      const bName = document.getElementById('businessName').value.trim() || 'My Business';
+      const rType = document.getElementById('reportType').value;
+      const rPeriod = document.getElementById('reportPeriod').value.trim() || 'Current Period';
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+
+      document.getElementById('reportPlaceholder').style.display = 'none';
+      document.getElementById('reportContainer').style.display = 'none';
+      document.getElementById('reportLoader').style.display = 'flex';
+
+      document.getElementById('printBtn').disabled = true;
+      document.getElementById('downloadBtn').disabled = true;
+
+      try {
+        const res = await fetch('/api/generate-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            businessName: bName,
+            reportType: rType,
+            period: rPeriod
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        rawReportText = data.report;
+        reportMetadata = data;
+
+        // Custom markdown parser handles table representation properly
+        let htmlContent = renderMarkdown(rawReportText);
+        
+        // Format table blocks if the simple renderer missed them
+        htmlContent = formatMarkdownTables(htmlContent);
+
+        const container = document.getElementById('reportContainer');
+        container.innerHTML = htmlContent;
+        container.style.display = 'block';
+
+        document.getElementById('printBtn').disabled = false;
+        document.getElementById('downloadBtn').disabled = false;
+        showToast('Report generated successfully!', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+        document.getElementById('reportPlaceholder').style.display = 'block';
+      }
+
+      document.getElementById('reportLoader').style.display = 'none';
+      btn.disabled = false;
+      btn.textContent = '🤖 Re-Generate';
+    }
+
+    function formatMarkdownTables(html) {
+      // Very basic table parser to convert markdown table rows into HTML tables
+      // Looks for text pattern with pipes: | col1 | col2 |
+      if (!html.includes('|')) return html;
+      
+      const lines = html.split('\n');
+      let inTable = false;
+      let tableRows = [];
+      let newLines = [];
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (line.startsWith('|') && line.endsWith('|')) {
+          if (!inTable) {
+            inTable = true;
+            tableRows = [];
+          }
+          // Skip divider rows e.g. |---|---|
+          if (!line.includes('---')) {
+            const cells = line.split('|').map(c => c.trim()).filter((c, idx, arr) => idx > 0 && idx < arr.length - 1);
+            tableRows.push(cells);
+          }
+        } else {
+          if (inTable) {
+            // Render table
+            let tableHtml = '<table>';
+            tableRows.forEach((row, rowIndex) => {
+              tableHtml += '<tr>';
+              row.forEach(cell => {
+                const tag = rowIndex === 0 ? 'th' : 'td';
+                tableHtml += `<${tag}>${cell}</${tag}>`;
+              });
+              tableHtml += '</tr>';
+            });
+            tableHtml += '</table>';
+            newLines.push(tableHtml);
+            inTable = false;
+          }
+          newLines.push(lines[i]);
+        }
+      }
+      return newLines.join('\n');
+    }
+
+    function printReport() {
+      window.print();
+    }
+
+    function downloadReport() {
+      if (!rawReportText) return;
+      const blob = new Blob([rawReportText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const filename = `${reportMetadata.reportType.replace(/\s+/g, '_')}_${reportMetadata.businessName.replace(/\s+/g, '_')}.txt`;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Text file download started!', 'success');
+    }
+  </script>
+</body>
+</html>

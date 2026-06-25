@@ -1,33 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
-// Configure multer for memory storage
-const upload = multer({ storage: multer.memoryStorage() });
-
-// Controllers
 const aiController = require('../controllers/aiController');
-const weatherController = require('../controllers/weatherController');
 
-// Test route
-router.get('/status', (req, res) => {
-    res.json({ status: 'API is running' });
-});
+// Health check
+router.get('/status', (req, res) => res.json({ status: 'AI Business Assistant API is running', version: '2.0.0' }));
 
-// Example route structure for Gemini integration
-router.post('/crop-advisor', aiController.getCropAdvice);
-router.post('/disease-detect', upload.single('image'), aiController.detectDisease);
+// Sales data upload + analysis
+router.post('/upload-sales', upload.single('salesFile'), aiController.uploadAndAnalyzeSales);
 
-// Route for Weather
-router.post('/weather', weatherController.getWeather);
+// AI insights from sales data
+router.post('/ai-insights', aiController.getAIInsights);
 
-// Route for Fertilizer
-router.post('/fertilizer-recommend', aiController.getFertilizerRecommendation);
+// Inventory forecasting
+router.post('/inventory-forecast', aiController.forecastInventory);
 
-// Route for Government Schemes
-router.post('/schemes', aiController.getGovernmentSchemes);
+// Business chatbot
+router.post('/chat', aiController.handleBusinessChat);
 
-// Route for AI Chat (Hindi Voice Assistant)
-router.post('/chat', aiController.handleChat);
+// Report generation
+router.post('/generate-report', aiController.generateReport);
 
 module.exports = router;

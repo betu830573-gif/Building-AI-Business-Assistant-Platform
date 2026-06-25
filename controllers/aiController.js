@@ -1,117 +1,373 @@
-// Mock aiController.js - Replaced Gemini API with dummy data
+const { GoogleGenAI } = require('@google/genai');
+const csv = require('csv-parser');
+const xlsx = require('xlsx');
+const { Readable } = require('stream');
 
-exports.getCropAdvice = async (req, res) => {
-    try {
-        const { crop, location, season } = req.body;
-        // Mock response
-        const advice = `### 🌿 ${crop} Farming Advice for ${location} (${season})
+// In-memory session store for uploaded sales data
+const sessionStore = new Map();
+const SESSION_KEY = 'current_sales_data';
 
-**Sowing Tips:**
-- Use high-quality, certified seeds.
-- Ensure proper spacing between rows to allow sunlight and aeration.
-- Treat seeds with organic fungicides before planting to prevent soil-borne diseases.
+// Initialize Gemini AI
+const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
 
-**Irrigation Schedule:**
-- Apply first irrigation immediately after sowing if the soil is dry.
-- Provide regular irrigation every 10-15 days during the critical growth stages.
-- Avoid waterlogging in the field as it can damage the roots.
+// ─── Helper: Parse CSV buffer ───────────────────────────────────────────────
+function parseCSV(buffer) {
+    return new Promise((resolve, reject) => {
+        const results = [];
+        const stream = Readable.from(buffer.toString('utf-8'));
+        stream
+            .pipe(csv())
+            .on('data', (row) => results.push(row))
+            .on('end', () => resolve(results))
+            .on('error', reject);
+    });
+}
 
-**Harvesting Guidance:**
-- Harvest when the crop reaches full maturity (e.g., leaves turn yellow/brown).
-- Store the harvested produce in a cool, dry place to prevent moisture and pest attacks.
-- Good luck with your farming!`;
+// ─── Helper: Parse Excel buffer ─────────────────────────────────────────────
+function parseExcel(buffer) {
+    const workbook = xlsx.read(buffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    return xlsx.utils.sheet_to_json(sheet);
+}
 
-        // Simulate network delay
-        setTimeout(() => res.json({ advice }), 1500);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to generate crop advice.' });
+// ─── Helper: Compute KPIs from rows ─────────────────────────────────────────
+function computeKPIs(rows) {
+    if (!rows || rows.length === 0) return null;
+
+    // Detect column names flexibly
+    const keys = Object.keys(rows[0]).map(k => k.trim());
+    const findCol = (...names) => keys.find(k => names.some(n => k.toLowerCase().includes(n.toLowerCase())));
+
+    const productCol = findCol('product', 'item', 'name', 'Product Name');
+    const revenueCol = findCol('revenue', 'amount', 'sales', 'total', 'price');
+    const quantityCol = findCol('quantity', 'qty', 'units', 'sold');
+    const dateCol = findCol('date', 'Date', 'month', 'period');
+
+    let totalRevenue = 0;
+    const productMap = {};
+    const monthlyMap = {};
+
+    rows.forEach(row => {
+        const cleanRow = {};
+        Object.keys(row).forEach(k => { cleanRow[k.trim()] = row[k]; });
+
+        const revenue = parseFloat(cleanRow[revenueCol]) || 0;
+        const qty = parseFloat(cleanRow[quantityCol]) || 0;
+        const product = cleanRow[productCol] || 'Unknown';
+        const date = cleanRow[dateCol] || '';
+
+        totalRevenue += revenue;
+
+        if (!productMap[product]) productMap[product] = { revenue: 0, quantity: 0 };
+        productMap[product].revenue += revenue;
+        productMap[product].quantity += qty;
+
+        // Monthly grouping
+        const month = date ? date.substring(0, 7) : 'Unknown';
+        if (!monthlyMap[month]) monthlyMap[month] = 0;
+        monthlyMap[month] += revenue;
+    });
+
+    // Sort products by revenue
+    const topProducts = Object.entries(productMap)
+        .sort((a, b) => b[1].revenue - a[1].revenue)
+        .slice(0, 10)
+        .map(([name, data]) => ({ name, ...data }));
+
+    // Monthly trend sorted
+    const monthlyTrend = Object.entries(monthlyMap)
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([month, revenue]) => ({ month, revenue }));
+
+    const avgDailySales = rows.length > 0 ? totalRevenue / Math.max(monthlyTrend.length || 1, 1) : 0;
+
+    // Growth calculation
+    let growthPercent = 0;
+    if (monthlyTrend.length >= 2) {
+        const last = monthlyTrend[monthlyTrend.length - 1].revenue;
+        const prev = monthlyTrend[monthlyTrend.length - 2].revenue;
+        growthPercent = prev > 0 ? (((last - prev) / prev) * 100).toFixed(1) : 0;
     }
-};
 
-exports.detectDisease = async (req, res) => {
+    return {
+        totalRevenue: totalRevenue.toFixed(2),
+        totalTransactions: rows.length,
+        topProducts,
+        monthlyTrend,
+        avgMonthlySales: avgDailySales.toFixed(2),
+        growthPercent,
+        columns: { productCol, revenueCol, quantityCol, dateCol },
+        rawRows: rows.slice(0, 50) // send first 50 rows as preview
+    };
+}
+
+// ─── Helper: Call Gemini ─────────────────────────────────────────────────────
+async function callGemini(prompt) {
+    const model = genAI.models ? genAI : genAI;
+    const response = await genAI.models.generateContent({
+        model: 'gemini-2.0-flash',
+        contents: prompt
+    });
+    return response.text;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CONTROLLER FUNCTIONS
+// ════════════════════════════════════════════════════════════════════════════
+
+// POST /api/upload-sales
+exports.uploadAndAnalyzeSales = async (req, res) => {
     try {
         if (!req.file) {
-            return res.status(400).json({ error: 'No image uploaded' });
+            return res.status(400).json({ error: 'No file uploaded. Please upload a CSV or Excel file.' });
         }
 
-        // Mock response
-        const analysis = `### 🔍 Disease Analysis Report
+        const filename = req.file.originalname.toLowerCase();
+        let rows = [];
 
-**Disease Identified:** Leaf Spot / Early Blight (Mock Detection)
+        if (filename.endsWith('.csv')) {
+            rows = await parseCSV(req.file.buffer);
+        } else if (filename.endsWith('.xlsx') || filename.endsWith('.xls')) {
+            rows = parseExcel(req.file.buffer);
+        } else {
+            return res.status(400).json({ error: 'Unsupported file format. Please upload a CSV or Excel file.' });
+        }
 
-**Cause:** 
-This is usually caused by fungal pathogens thriving in warm and humid conditions.
+        if (rows.length === 0) {
+            return res.status(400).json({ error: 'File is empty or could not be parsed.' });
+        }
 
-**Treatment & Prevention:**
-- **Organic:** Spray Neem oil mixed with mild soap water every 7 days.
-- **Chemical:** Use a copper-based fungicide or Mancozeb as per agricultural guidelines.
-- **Prevention:** Ensure proper spacing for air circulation and avoid overhead watering to keep leaves dry.`;
+        const kpis = computeKPIs(rows);
 
-        setTimeout(() => res.json({ analysis }), 2000);
+        // Store in session for chat context
+        sessionStore.set(SESSION_KEY, { rows, kpis, filename: req.file.originalname });
+
+        res.json({ success: true, kpis, message: `Successfully parsed ${rows.length} records from ${req.file.originalname}` });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to analyze the image.' });
+        console.error('Upload error:', error);
+        res.status(500).json({ error: 'Failed to process uploaded file. Please check the format and try again.' });
     }
 };
 
-exports.getFertilizerRecommendation = async (req, res) => {
+// POST /api/ai-insights
+exports.getAIInsights = async (req, res) => {
     try {
-        const { crop, soilType } = req.body;
+        const session = sessionStore.get(SESSION_KEY);
+        const { kpis } = req.body;
+        const dataKpis = kpis || (session && session.kpis);
 
-        // Mock response
-        const recommendation = `### 🌱 Fertilizer Plan for ${crop} in ${soilType} Soil
+        if (!dataKpis) {
+            return res.status(400).json({ error: 'No sales data available. Please upload your data first.' });
+        }
 
-**Organic Options:**
-- **Vermicompost:** Apply 2-3 tonnes per acre during soil preparation.
-- **Cow Dung Manure:** Highly effective for ${soilType} soil to improve water retention.
+        const topProductsList = dataKpis.topProducts
+            .slice(0, 5)
+            .map((p, i) => `${i + 1}. ${p.name}: $${p.revenue} revenue, ${p.quantity} units`)
+            .join('\n');
 
-**Synthetic Options (NPK):**
-- Use a balanced NPK ratio (e.g., 19:19:19) depending on the exact soil test.
-- Urea: Apply in split doses (30% at sowing, 70% during vegetative growth).
+        const monthlyList = dataKpis.monthlyTrend
+            .slice(-6)
+            .map(m => `${m.month}: $${m.revenue}`)
+            .join('\n');
 
-**Schedule:**
-1. **Basal Dose:** At the time of sowing.
-2. **Top Dressing:** 30-40 days after sowing.`;
+        const prompt = `You are a business intelligence analyst. Analyze this sales data and provide actionable insights.
 
-        setTimeout(() => res.json({ recommendation }), 1500);
+Business Sales Data Summary:
+- Total Revenue: $${dataKpis.totalRevenue}
+- Total Transactions: ${dataKpis.totalTransactions}
+- Monthly Growth: ${dataKpis.growthPercent}%
+- Average Monthly Sales: $${dataKpis.avgMonthlySales}
+
+Top Products:
+${topProductsList}
+
+Monthly Revenue Trend (last 6 months):
+${monthlyList}
+
+Provide:
+1. **Key Insights** (3-4 bullet points about what's working well)
+2. **Growth Opportunities** (2-3 specific, actionable recommendations)
+3. **Risk Alerts** (any concerning patterns to watch)
+4. **Quick Wins** (1-2 things to do this week to increase revenue)
+
+Format with clear sections using markdown bold headers. Be specific, practical and concise.`;
+
+        const insight = await callGemini(prompt);
+        res.json({ insight });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to generate recommendation.' });
+        console.error('AI insights error:', error);
+        res.status(500).json({ error: 'Failed to generate AI insights. Please check your Gemini API key in .env file.' });
     }
 };
 
-exports.getGovernmentSchemes = async (req, res) => {
+// POST /api/inventory-forecast
+exports.forecastInventory = async (req, res) => {
     try {
-        const { state, category } = req.body;
+        const { products, timeframe } = req.body;
 
-        // Mock response
-        const schemes = `### 🏛️ Relevant Schemes for ${category} Farmers in ${state}
+        if (!products || products.length === 0) {
+            return res.status(400).json({ error: 'Please provide product inventory data.' });
+        }
 
-**1. PM-KISAN (Pradhan Mantri Kisan Samman Nidhi):**
-- **Benefit:** ₹6,000 per year transferred directly to bank accounts.
-- **Documents Required:** Aadhaar Card, Land ownership papers, Bank account details.
+        const session = sessionStore.get(SESSION_KEY);
+        const salesContext = session ? `
+Historical Sales Context:
+- Total Revenue: $${session.kpis.totalRevenue}
+- Top Products: ${session.kpis.topProducts.slice(0, 3).map(p => p.name).join(', ')}
+` : '';
 
-**2. PMFBY (Pradhan Mantri Fasal Bima Yojana):**
-- **Benefit:** Crop insurance against natural calamities at a very low premium.
-- **Documents Required:** Sowing certificate, Aadhaar, Bank Passbook.
+        const productList = products.map((p, i) =>
+            `${i + 1}. ${p.name}: Current Stock = ${p.currentStock} units, Daily Sales = ${p.dailySales || 'unknown'} units/day, Reorder Point = ${p.reorderPoint || 'not set'}`
+        ).join('\n');
 
-**3. State Subsidy on Farm Equipment:**
-- **Benefit:** Up to 40-50% subsidy on purchasing tractors and modern farm tools for ${category} category.
-- **Apply:** Contact your local Krishi Bhavan or state agriculture portal.`;
+        const prompt = `You are an inventory management expert for a small business. Analyze this inventory data and provide forecasting recommendations.
 
-        setTimeout(() => res.json({ schemes }), 1500);
+${salesContext}
+
+Current Inventory Status:
+${productList}
+
+Forecast Timeframe: ${timeframe || '30 days'}
+
+Provide for EACH product:
+1. **Estimated Stock Duration** – how many days will current stock last
+2. **Recommended Reorder Quantity** – how much to order
+3. **Reorder Date** – when to place the next order
+4. **Risk Level** – 🔴 Critical / 🟡 Warning / 🟢 Safe
+
+Then provide:
+**Overall Inventory Health** summary
+**Top Priority Actions** – 3 immediate steps
+
+Be specific with numbers. Format clearly with product headers.`;
+
+        const forecast = await callGemini(prompt);
+        res.json({ forecast });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch schemes.' });
+        console.error('Inventory forecast error:', error);
+        res.status(500).json({ error: 'Failed to generate inventory forecast. Please check your Gemini API key.' });
     }
 };
 
-exports.handleChat = async (req, res) => {
+// POST /api/chat
+exports.handleBusinessChat = async (req, res) => {
     try {
-        const { message } = req.body;
-        
-        // Mock response
-        const reply = "यह एक डेमो उत्तर है! आपने पूछा था: '" + message + "'। असली सिस्टम में यहाँ AI आपको खेती से जुड़ी एक अच्छी और सटीक सलाह देगा।";
+        const { message, history } = req.body;
 
-        setTimeout(() => res.json({ reply }), 1000);
+        if (!message) return res.status(400).json({ error: 'Message is required.' });
+
+        const session = sessionStore.get(SESSION_KEY);
+        let context = '';
+
+        if (session && session.kpis) {
+            const topProducts = session.kpis.topProducts.slice(0, 5).map(p => `${p.name}: $${p.revenue}`).join(', ');
+            context = `
+You have access to this business's sales data:
+- File: ${session.filename}
+- Total Revenue: $${session.kpis.totalRevenue}
+- Total Transactions: ${session.kpis.totalTransactions}
+- Monthly Growth: ${session.kpis.growthPercent}%
+- Top Products: ${topProducts}
+- Monthly Trend: ${session.kpis.monthlyTrend.slice(-3).map(m => `${m.month}: $${m.revenue}`).join(', ')}
+`;
+        } else {
+            context = 'No sales data has been uploaded yet. You can still answer general business questions.';
+        }
+
+        const conversationHistory = (history || [])
+            .slice(-6)
+            .map(h => `${h.role === 'user' ? 'User' : 'Assistant'}: ${h.content}`)
+            .join('\n');
+
+        const prompt = `You are a friendly, expert AI Business Assistant for a small business. Answer questions clearly and helpfully.
+
+${context}
+
+${conversationHistory ? `Recent conversation:\n${conversationHistory}\n` : ''}
+
+User: ${message}
+
+Provide a helpful, concise answer. If sales data is available, reference specific numbers. Use emojis sparingly to make responses friendly.`;
+
+        const reply = await callGemini(prompt);
+        res.json({ reply });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to process chat message.' });
+        console.error('Chat error:', error);
+        res.status(500).json({ error: 'Failed to process message. Please check your Gemini API key.' });
+    }
+};
+
+// POST /api/generate-report
+exports.generateReport = async (req, res) => {
+    try {
+        const { businessName, reportType, period } = req.body;
+        const session = sessionStore.get(SESSION_KEY);
+
+        const kpis = session && session.kpis;
+        const name = businessName || 'Your Business';
+        const type = reportType || 'Monthly Performance';
+        const reportPeriod = period || 'Current Period';
+
+        let dataSection = '';
+        if (kpis) {
+            dataSection = `
+Sales Data Available:
+- Total Revenue: $${kpis.totalRevenue}
+- Total Transactions: ${kpis.totalTransactions}
+- Monthly Growth: ${kpis.growthPercent}%
+- Top Products: ${kpis.topProducts.slice(0, 5).map(p => `${p.name} ($${p.revenue})`).join(', ')}
+- Monthly Trend: ${kpis.monthlyTrend.map(m => `${m.month}: $${m.revenue}`).join(', ')}
+`;
+        } else {
+            dataSection = 'No specific sales data uploaded. Generate a general business performance report template.';
+        }
+
+        const prompt = `Generate a professional ${type} Business Intelligence Report for "${name}" covering ${reportPeriod}.
+
+${dataSection}
+
+Format the report as follows:
+
+# ${type} Report – ${name}
+**Period:** ${reportPeriod}
+**Generated:** ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+
+---
+
+## Executive Summary
+[2-3 sentence overview of business performance]
+
+## Key Performance Indicators
+[Table-style summary of main metrics]
+
+## Revenue Analysis
+[Detailed breakdown with insights]
+
+## Product Performance
+[Top and bottom performers]
+
+## Trend Analysis
+[Month-over-month patterns and observations]
+
+## Opportunities & Recommendations
+[3-5 actionable recommendations with expected impact]
+
+## Risk Assessment
+[Key risks and mitigation strategies]
+
+## Action Plan – Next 30 Days
+[Prioritized list of actions with owners and deadlines]
+
+---
+*Report generated by AI Business Assistant*
+
+Make the report professional, data-driven, and specific. Include actual numbers where available.`;
+
+        const report = await callGemini(prompt);
+        res.json({ report, businessName: name, reportType: type, period: reportPeriod, generatedAt: new Date().toISOString() });
+    } catch (error) {
+        console.error('Report error:', error);
+        res.status(500).json({ error: 'Failed to generate report. Please check your Gemini API key.' });
     }
 };

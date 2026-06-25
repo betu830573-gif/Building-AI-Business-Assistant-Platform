@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Inventory Forecasting – Predict stock needs, prevent stockouts, and optimize your inventory with AI." />
+  <title>Inventory Forecast – AI Business Assistant</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    .inventory-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 1.5rem;
+      align-items: start;
+      padding-bottom: 3rem;
+    }
+
+    .product-form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      position: sticky;
+      top: 80px;
+    }
+
+    .product-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 320px;
+      overflow-y: auto;
+      margin: 1rem 0;
+      padding-right: 4px;
+    }
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.875rem 1rem;
+      background: rgba(124,58,237,0.05);
+      border: 1px solid rgba(124,58,237,0.15);
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      animation: bubbleIn 0.3s ease;
+    }
+
+    .product-item-info { flex: 1; }
+    .product-item-name { font-weight: 600; color: var(--text-primary); }
+    .product-item-meta { color: var(--text-muted); font-size: 0.78rem; margin-top: 2px; }
+
+    .remove-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(239,68,68,0.3);
+      background: rgba(239,68,68,0.08);
+      color: var(--red-light);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .remove-btn:hover { background: rgba(239,68,68,0.2); }
+
+    .result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .result-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .result-body { padding: 1.75rem; }
+
+    .forecast-placeholder {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--text-muted);
+    }
+
+    .forecast-placeholder .icon { font-size: 4rem; margin-bottom: 1rem; opacity: 0.4; }
+
+    @media (max-width: 900px) {
+      .inventory-layout { grid-template-columns: 1fr; }
+      .product-form-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📊</div>
+      <span>AI Business Assistant</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard">📈 Dashboard</a></li>
+      <li><a href="/inventory" class="active">📦 Inventory</a></li>
+      <li><a href="/chat">💬 AI Chat</a></li>
+      <li><a href="/reports">📄 Reports</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">📦 Inventory Forecasting</h1>
+        <p class="page-subtitle">Add your products and let AI predict stock requirements, reorder dates, and prevent costly stockouts</p>
+      </div>
+
+      <div class="inventory-layout">
+        <!-- Input Panel -->
+        <div class="product-form-card">
+          <h2 class="card-title mb-3">Add Products</h2>
+
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input class="form-input" id="prodName" placeholder="e.g. Blue Denim Jeans" />
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Current Stock (units)</label>
+              <input class="form-input" id="prodStock" type="number" min="0" placeholder="150" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Daily Sales (units/day)</label>
+              <input class="form-input" id="prodDailySales" type="number" min="0" placeholder="5" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reorder Point (units)</label>
+            <input class="form-input" id="prodReorder" type="number" min="0" placeholder="30" />
+          </div>
+
+          <button class="btn btn-secondary w-full" onclick="addProduct()">➕ Add Product</button>
+
+          <!-- Product List -->
+          <div id="productList" class="product-list" style="display:none;"></div>
+
+          <div id="productCount" style="display:none; font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;"></div>
+
+          <div class="form-group">
+            <label class="form-label">Forecast Timeframe</label>
+            <select class="form-select" id="timeframe">
+              <option value="30 days">Next 30 Days</option>
+              <option value="60 days">Next 60 Days</option>
+              <option value="90 days">Next 90 Days (Quarter)</option>
+              <option value="6 months">Next 6 Months</option>
+            </select>
+          </div>
+
+          <button class="btn btn-primary w-full" id="forecastBtn" onclick="generateForecast()">🤖 Generate AI Forecast</button>
+        </div>
+
+        <!-- Result Panel -->
+        <div class="result-card">
+          <div class="result-header">
+            <div class="card-title">🔮 AI Inventory Forecast</div>
+            <div id="forecastStatus"></div>
+          </div>
+          <div class="result-body">
+            <div class="forecast-placeholder" id="forecastPlaceholder">
+              <div class="icon">📦</div>
+              <p style="font-size:1rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.5rem;">No forecast yet</p>
+              <p>Add your products on the left panel and click "Generate AI Forecast" to get stock predictions.</p>
+            </div>
+
+            <div id="forecastLoader" style="display:none;" class="loader-wrap">
+              <div class="spinner"></div>
+              <span>AI is analyzing your inventory needs...</span>
+            </div>
+
+            <div id="forecastResult" style="display:none;" class="ai-response">
+              <div class="ai-badge">🔮 Inventory AI</div>
+              <div class="ai-response-text md-content" id="forecastText"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script>
+    let products = [];
+
+    function addProduct() {
+      const name = document.getElementById('prodName').value.trim();
+      const stock = document.getElementById('prodStock').value;
+      const daily = document.getElementById('prodDailySales').value;
+      const reorder = document.getElementById('prodReorder').value;
+
+      if (!name) { showToast('Product name is required', 'error'); return; }
+      if (!stock) { showToast('Current stock is required', 'error'); return; }
+
+      products.push({
+        name,
+        currentStock: parseInt(stock),
+        dailySales: daily ? parseFloat(daily) : null,
+        reorderPoint: reorder ? parseInt(reorder) : null
+      });
+
+      renderProductList();
+      document.getElementById('prodName').value = '';
+      document.getElementById('prodStock').value = '';
+      document.getElementById('prodDailySales').value = '';
+      document.getElementById('prodReorder').value = '';
+      showToast(`"${name}" added`, 'success');
+    }
+
+    function removeProduct(index) {
+      const name = products[index].name;
+      products.splice(index, 1);
+      renderProductList();
+      showToast(`"${name}" removed`, 'info');
+    }
+
+    function renderProductList() {
+      const list = document.getElementById('productList');
+      const count = document.getElementById('productCount');
+
+      if (products.length === 0) {
+        list.style.display = 'none';
+        count.style.display = 'none';
+        return;
+      }
+
+      list.style.display = 'flex';
+      count.style.display = 'block';
+      count.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} added`;
+
+      list.innerHTML = products.map((p, i) => `
+        <div class="product-item">
+          <div class="product-item-info">
+            <div class="product-item-name">${p.name}</div>
+            <div class="product-item-meta">
+              Stock: ${p.currentStock} units
+              ${p.dailySales ? `· Sales: ${p.dailySales}/day` : ''}
+              ${p.reorderPoint ? `· Reorder at: ${p.reorderPoint}` : ''}
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeProduct(${i})">✕</button>
+        </div>`).join('');
+    }
+
+    async function generateForecast() {
+      if (products.length === 0) { showToast('Please add at least one product', 'error'); return; }
+
+      const btn = document.getElementById('forecastBtn');
+      btn.disabled = true; btn.textContent = '⏳ Forecasting...';
+
+      document.getElementById('forecastPlaceholder').style.display = 'none';
+      document.getElementById('forecastResult').style.display = 'none';
+      document.getElementById('forecastLoader').style.display = 'flex';
+      document.getElementById('forecastStatus').innerHTML = '<span class="status-pill info">Analyzing...</span>';
+
+      try {
+        const res = await fetch('/api/inventory-forecast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ products, timeframe: document.getElementById('timeframe').value })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        document.getElementById('forecastText').innerHTML = renderMarkdown(data.forecast);
+        document.getElementById('forecastResult').style.display = 'block';
+        document.getElementById('forecastStatus').innerHTML = '<span class="status-pill success">Forecast Ready</span>';
+        showToast('Inventory forecast complete!', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+        document.getElementById('forecastPlaceholder').style.display = 'block';
+        document.getElementById('forecastStatus').innerHTML = '<span class="status-pill danger">Failed</span>';
+      }
+
+      document.getElementById('forecastLoader').style.display = 'none';
+      btn.disabled = false; btn.textContent = '🤖 Re-Forecast';
+    }
+
+    // Enter key on product name
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('prodName').addEventListener('keydown', e => {
+        if (e.key === 'Enter') addProduct();
+      });
+    });
+  </script>
+</body>
+</html>

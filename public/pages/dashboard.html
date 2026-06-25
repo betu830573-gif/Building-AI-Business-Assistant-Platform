@@ -1,121 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - KrishiMitra AI</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Business Analytics Dashboard – Upload sales data, view KPIs, charts, and get AI-powered business insights." />
+  <title>Sales Dashboard – AI Business Assistant</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-bottom: 3rem;
+    }
+
+    .upload-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+    }
+
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .chart-card canvas { max-height: 260px; }
+
+    .insights-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .insights-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .insights-body { padding: 1.5rem; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; opacity: 0.5; }
+    .empty-state p { margin-bottom: 1.5rem; }
+
+    .file-info {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0.75rem 1rem;
+      background: rgba(16,185,129,0.08);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--green-light);
+    }
+
+    @media (max-width: 900px) {
+      .charts-row { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📊</div>
+      <span>AI Business Assistant</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">🏠 Home</a></li>
+      <li><a href="/dashboard" class="active">📈 Dashboard</a></li>
+      <li><a href="/inventory">📦 Inventory</a></li>
+      <li><a href="/chat">💬 AI Chat</a></li>
+      <li><a href="/reports">📄 Reports</a></li>
+    </ul>
+  </nav>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="advisor.html">Crop Advisor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="disease.html">Disease Detection</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">📈 Sales Analytics Dashboard</h1>
+        <p class="page-subtitle">Upload your sales data to visualize trends, top products, and get AI-powered insights</p>
+      </div>
 
-    <!-- Main Content -->
-    <div class="container py-5">
-        <h2 class="fw-bold mb-4">Welcome to Your Dashboard, Farmer!</h2>
-        <div class="row g-4">
-            <div class="col-md-3">
-                <div class="card h-100 shadow-sm border-0 bg-white">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">🌤️ Current Weather</h5>
-                        <p class="card-text" id="weatherWidget">Loading weather...</p>
-                        <a href="weather.html" class="btn btn-sm btn-outline-success">View Details</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-9">
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <a href="advisor.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-success text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🌿</h1>
-                                    <h5 class="card-title fw-bold">Crop Advisor</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="disease.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-primary text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">📸</h1>
-                                    <h5 class="card-title fw-bold">Scan Disease</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="market.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-warning text-dark">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">💰</h1>
-                                    <h5 class="card-title fw-bold">Market Prices</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="fertilizer.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-info text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🌱</h1>
-                                    <h5 class="card-title fw-bold">Fertilizer Advice</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="schemes.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-secondary text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🏛️</h1>
-                                    <h5 class="card-title fw-bold">Govt Schemes</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="chat.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card" style="background-color: #6f42c1; color: white;">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🎙️</h1>
-                                    <h5 class="card-title fw-bold">Voice Assistant</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
+      <div class="dashboard-layout">
+        <!-- Upload Section -->
+        <div class="upload-section">
+          <h2 class="card-title mb-2">📁 Upload Sales Data</h2>
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="fileInput" class="upload-input" accept=".csv,.xlsx,.xls" />
+            <span class="upload-icon">☁️</span>
+            <div class="upload-title">Drop your CSV or Excel file here</div>
+            <div class="upload-subtitle">or click to browse — Supports .csv, .xlsx, .xls up to 10MB</div>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+          </div>
+          <div id="fileInfo" style="display:none;" class="file-info">
+            <span>✅</span>
+            <span id="fileInfoText"></span>
+          </div>
         </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpiGrid" style="display:none;">
+          <div class="kpi-card">
+            <div class="kpi-icon purple">💰</div>
+            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-value" id="kpiRevenue">—</div>
+            <div id="kpiGrowthBadge" class="kpi-badge neutral">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon cyan">🛒</div>
+            <div class="kpi-label">Total Transactions</div>
+            <div class="kpi-value" id="kpiTransactions">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon green">🏆</div>
+            <div class="kpi-label">Top Product</div>
+            <div class="kpi-value" id="kpiTopProduct" style="font-size:1rem;margin-top:4px;">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon orange">📅</div>
+            <div class="kpi-label">Avg Monthly Sales</div>
+            <div class="kpi-value" id="kpiAvgSales">—</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="charts-row" id="chartsRow" style="display:none;">
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">📊 Monthly Revenue Trend</div>
+            </div>
+            <canvas id="revenueChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">🏆 Top Products</div>
+            </div>
+            <canvas id="productsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="insights-section" id="insightsSection" style="display:none;">
+          <div class="insights-header">
+            <div class="card-title">🤖 AI Business Insights</div>
+            <button class="btn btn-primary btn-sm" id="getInsightsBtn" onclick="getInsights()">✨ Analyze with AI</button>
+          </div>
+          <div class="insights-body">
+            <div class="empty-state" id="insightsEmpty">
+              <span class="empty-icon">🤖</span>
+              <p>Click "Analyze with AI" to get personalized business insights powered by Gemini AI</p>
+            </div>
+            <div id="insightsLoader" style="display:none;" class="loader-wrap">
+              <div class="spinner"></div>
+              <span>Gemini AI is analyzing your data...</span>
+            </div>
+            <div id="insightsResult" style="display:none;" class="ai-response">
+              <div class="ai-badge">✨ AI Insight</div>
+              <div class="ai-response-text md-content" id="insightsText"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Products Table -->
+        <div class="card" id="tableSection" style="display:none;">
+          <div class="card-header">
+            <div class="card-title">📋 Product Performance</div>
+            <span id="tableCount" class="status-pill info"></span>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="productsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Product</th>
+                  <th>Revenue</th>
+                  <th>Quantity Sold</th>
+                  <th>Share</th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script>
+    let currentKPIs = null;
+    let revenueChartInstance = null;
+    let productsChartInstance = null;
+
+    // Drag & drop
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) uploadFile(file);
+    });
+
+    document.getElementById('fileInput').addEventListener('change', e => {
+      if (e.target.files[0]) uploadFile(e.target.files[0]);
+    });
+
+    async function uploadFile(file) {
+      const allowed = ['.csv', '.xlsx', '.xls'];
+      if (!allowed.some(ext => file.name.toLowerCase().endsWith(ext))) {
+        showToast('Please upload a CSV or Excel file', 'error');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('salesFile', file);
+
+      zone.innerHTML = `<div class="loader-wrap" style="justify-content:center;"><div class="spinner"></div><span>Uploading and parsing ${file.name}...</span></div>`;
+
+      try {
+        const res = await fetch('/api/upload-sales', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Upload failed');
+
+        currentKPIs = data.kpis;
+        renderDashboard(data.kpis);
+        showToast(`✅ ${data.message}`, 'success');
+
+        document.getElementById('fileInfo').style.display = 'flex';
+        document.getElementById('fileInfoText').textContent = `${file.name} · ${data.kpis.totalTransactions} records loaded`;
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+
+      // Reset upload zone
+      zone.innerHTML = `
+        <input type="file" id="fileInput" class="upload-input" accept=".csv,.xlsx,.xls" />
+        <span class="upload-icon">✅</span>
+        <div class="upload-title">File loaded! Drop another to replace</div>
+        <div class="upload-subtitle">or click to browse</div>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('fileInput').click()">Replace File</button>`;
+      document.getElementById('fileInput').addEventListener('change', e => {
+        if (e.target.files[0]) uploadFile(e.target.files[0]);
+      });
+    }
+
+    function renderDashboard(kpis) {
+      // Show sections
+      ['kpiGrid', 'chartsRow', 'insightsSection', 'tableSection'].forEach(id => {
+        document.getElementById(id).style.display = '';
+      });
+
+      // KPIs
+      document.getElementById('kpiRevenue').textContent = formatCurrency(kpis.totalRevenue);
+      document.getElementById('kpiTransactions').textContent = formatNumber(kpis.totalTransactions);
+      document.getElementById('kpiTopProduct').textContent = kpis.topProducts[0]?.name || '—';
+      document.getElementById('kpiAvgSales').textContent = formatCurrency(kpis.avgMonthlySales);
+
+      const badge = document.getElementById('kpiGrowthBadge');
+      const growth = parseFloat(kpis.growthPercent);
+      badge.textContent = (growth >= 0 ? '▲ +' : '▼ ') + kpis.growthPercent + '% MoM';
+      badge.className = 'kpi-badge ' + (growth >= 0 ? 'up' : 'down');
+
+      // Revenue Chart
+      if (revenueChartInstance) revenueChartInstance.destroy();
+      const rCtx = document.getElementById('revenueChart').getContext('2d');
+      const labels = kpis.monthlyTrend.map(m => m.month);
+      const values = kpis.monthlyTrend.map(m => parseFloat(m.revenue));
+      revenueChartInstance = new Chart(rCtx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Revenue',
+            data: values,
+            borderColor: '#7c3aed',
+            backgroundColor: 'rgba(124,58,237,0.08)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#a78bfa',
+            pointRadius: 4,
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => '$' + c.parsed.y.toLocaleString() } } },
+          scales: {
+            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 11 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 11 }, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'K' : v) } }
+          }
+        }
+      });
+
+      // Products Chart
+      if (productsChartInstance) productsChartInstance.destroy();
+      const pCtx = document.getElementById('productsChart').getContext('2d');
+      const topProds = kpis.topProducts.slice(0, 7);
+      productsChartInstance = new Chart(pCtx, {
+        type: 'bar',
+        data: {
+          labels: topProds.map(p => p.name.length > 14 ? p.name.substring(0,14) + '…' : p.name),
+          datasets: [{
+            label: 'Revenue',
+            data: topProds.map(p => parseFloat(p.revenue)),
+            backgroundColor: ['rgba(124,58,237,0.7)','rgba(6,182,212,0.7)','rgba(16,185,129,0.7)','rgba(245,158,11,0.7)','rgba(236,72,153,0.7)','rgba(239,68,68,0.7)','rgba(99,102,241,0.7)'],
+            borderRadius: 6,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 11 }, callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'K' : v) } }
+          }
+        }
+      });
+
+      // Table
+      const totalRev = parseFloat(kpis.totalRevenue);
+      const tbody = document.getElementById('productsTableBody');
+      tbody.innerHTML = kpis.topProducts.map((p, i) => `
+        <tr>
+          <td class="rank">#${i + 1}</td>
+          <td class="highlight">${p.name}</td>
+          <td class="revenue">${formatCurrency(p.revenue)}</td>
+          <td>${formatNumber(p.quantity)}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span>${totalRev > 0 ? ((p.revenue / totalRev) * 100).toFixed(1) : 0}%</span>
+              <div class="progress-bar" style="flex:1;">
+                <div class="progress-fill" style="width:${totalRev > 0 ? ((p.revenue / totalRev) * 100).toFixed(1) : 0}%"></div>
+              </div>
+            </div>
+          </td>
+        </tr>`).join('');
+
+      document.getElementById('tableCount').textContent = `${kpis.topProducts.length} products`;
+    }
+
+    async function getInsights() {
+      if (!currentKPIs) { showToast('Upload sales data first', 'error'); return; }
+      const btn = document.getElementById('getInsightsBtn');
+      btn.disabled = true; btn.textContent = 'Analyzing…';
+      document.getElementById('insightsEmpty').style.display = 'none';
+      document.getElementById('insightsResult').style.display = 'none';
+      document.getElementById('insightsLoader').style.display = 'flex';
+
+      try {
+        const res = await fetch('/api/ai-insights', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kpis: currentKPIs })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        document.getElementById('insightsText').innerHTML = renderMarkdown(data.insight);
+        document.getElementById('insightsResult').style.display = 'block';
+        showToast('AI insights generated!', 'success');
+      } catch (err) {
+        showToast(err.message, 'error');
+        document.getElementById('insightsEmpty').style.display = 'block';
+      }
+
+      document.getElementById('insightsLoader').style.display = 'none';
+      btn.disabled = false; btn.textContent = '✨ Re-Analyze';
+    }
+  </script>
 </body>
 </html>
