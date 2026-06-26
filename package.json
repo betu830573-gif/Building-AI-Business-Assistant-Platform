@@ -1,5 +1,5 @@
 {
-  "name": "ai-farmer",
+  "name": "ai-business-assistant",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -10,6 +10,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "commonjs",
   "dependencies": {
     "@google/genai": "^2.7.0",
