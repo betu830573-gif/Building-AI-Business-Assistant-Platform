@@ -6,101 +6,173 @@
     <title>Market Prices - KrishiMitra</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand" href="index.html">🌾 KrishiMitra AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="advisor.html">Crop Advisor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="disease.html">Disease Detection</a></li>
-                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">🌿 Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">📸 Disease</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">⛅ Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="fertilizer.html">🌱 Fertilizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schemes.html">🏛️ Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="market.html">💰 Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">🎙️ Voice Chat</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="container py-5">
-        <h2 class="text-success fw-bold text-center mb-4">💰 Live Market Prices (Mandi)</h2>
-        <p class="text-muted text-center mb-5">Track the latest wholesale prices for different crops in your nearest mandi.</p>
-        
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th>Crop Name</th>
-                                        <th>State</th>
-                                        <th>Market (Mandi)</th>
-                                        <th>Min Price (₹/Quintal)</th>
-                                        <th>Max Price (₹/Quintal)</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- Mock Data -->
-                                    <tr>
-                                        <td class="fw-bold">Wheat</td>
-                                        <td>Punjab</td>
-                                        <td>Ludhiana</td>
-                                        <td>2,125</td>
-                                        <td>2,250</td>
-                                        <td>Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Rice (Paddy)</td>
-                                        <td>Haryana</td>
-                                        <td>Karnal</td>
-                                        <td>3,000</td>
-                                        <td>3,200</td>
-                                        <td>Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Soybean</td>
-                                        <td>Madhya Pradesh</td>
-                                        <td>Indore</td>
-                                        <td>4,500</td>
-                                        <td>4,800</td>
-                                        <td>Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Cotton</td>
-                                        <td>Maharashtra</td>
-                                        <td>Amravati</td>
-                                        <td>7,000</td>
-                                        <td>7,400</td>
-                                        <td>Yesterday</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="fw-bold">Onion</td>
-                                        <td>Maharashtra</td>
-                                        <td>Lasalgaon</td>
-                                        <td>1,200</td>
-                                        <td>1,800</td>
-                                        <td>Today</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p class="text-muted small text-center mt-3">*Note: These are estimated current prices. Actual prices may vary.</p>
-                    </div>
+    <div class="container" style="position:relative;z-index:1;">
+        <div class="page-header">
+            <div class="section-badge">Live Mandi Rates</div>
+            <h1>💰 Market Price Dashboard</h1>
+            <p>Track the latest wholesale prices across major mandis to get the best price for your crop.</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row g-3 mb-5">
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-3 text-center">
+                    <div style="font-size:1.8rem;">📈</div>
+                    <div class="fw-bold mt-1" style="color:#81C784;">Wheat</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">₹2,250/Qtl</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-3 text-center">
+                    <div style="font-size:1.8rem;">🌾</div>
+                    <div class="fw-bold mt-1" style="color:#F9A825;">Rice</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">₹3,200/Qtl</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-3 text-center">
+                    <div style="font-size:1.8rem;">🫘</div>
+                    <div class="fw-bold mt-1" style="color:#81C784;">Soybean</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">₹4,800/Qtl</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="glass-card p-3 text-center">
+                    <div style="font-size:1.8rem;">🌿</div>
+                    <div class="fw-bold mt-1" style="color:#EF9A9A;">Cotton</div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);">₹7,400/Qtl</div>
                 </div>
             </div>
         </div>
+
+        <!-- Main Table -->
+        <div class="glass-card mb-5" style="overflow:hidden;">
+            <div class="p-4 pb-0">
+                <h5 class="fw-bold mb-0">📋 Detailed Mandi Rates</h5>
+                <p style="color:var(--text-muted);font-size:0.85rem;margin-top:4px;">Updated: Today • Prices in ₹/Quintal</p>
+            </div>
+            <div class="table-responsive p-2">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>Crop</th>
+                            <th>State</th>
+                            <th>Mandi</th>
+                            <th>Min Price</th>
+                            <th>Max Price</th>
+                            <th>Trend</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🌾 Wheat</strong></td>
+                            <td>Punjab</td>
+                            <td>Ludhiana</td>
+                            <td>₹2,125</td>
+                            <td class="price-up">₹2,250</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🍚 Rice (Paddy)</strong></td>
+                            <td>Haryana</td>
+                            <td>Karnal</td>
+                            <td>₹3,000</td>
+                            <td class="price-up">₹3,200</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🫘 Soybean</strong></td>
+                            <td>Madhya Pradesh</td>
+                            <td>Indore</td>
+                            <td>₹4,500</td>
+                            <td class="price-up">₹4,800</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🌿 Cotton</strong></td>
+                            <td>Maharashtra</td>
+                            <td>Amravati</td>
+                            <td>₹7,000</td>
+                            <td class="price-down">₹7,400</td>
+                            <td><span style="color:#EF9A9A;">▼ Stable</span></td>
+                            <td>Yesterday</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🧅 Onion</strong></td>
+                            <td>Maharashtra</td>
+                            <td>Lasalgaon</td>
+                            <td>₹1,200</td>
+                            <td class="price-up">₹1,800</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🥔 Potato</strong></td>
+                            <td>Uttar Pradesh</td>
+                            <td>Agra</td>
+                            <td>₹800</td>
+                            <td class="price-down">₹1,050</td>
+                            <td><span style="color:#EF9A9A;">▼ Falling</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🌽 Maize</strong></td>
+                            <td>Bihar</td>
+                            <td>Patna</td>
+                            <td>₹1,700</td>
+                            <td class="price-up">₹1,950</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🥜 Groundnut</strong></td>
+                            <td>Gujarat</td>
+                            <td>Rajkot</td>
+                            <td>₹5,600</td>
+                            <td class="price-up">₹6,100</td>
+                            <td><span style="color:#81C784;">▲ Rising</span></td>
+                            <td>Today</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-3 pt-0">
+                <p style="color:var(--text-muted);font-size:0.78rem;" class="mb-0 text-center">⚠️ Note: Prices shown are estimated. Actual mandi prices may vary. Connect real API for live data.</p>
+            </div>
+        </div>
     </div>
+
+    <footer class="bg-dark text-center">
+        <div class="container">
+            <p class="mb-0" style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 KrishiMitra AI 🌾</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

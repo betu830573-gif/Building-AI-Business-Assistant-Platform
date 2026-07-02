@@ -6,80 +6,75 @@
     <title>Fertilizer Recommendation - KrishiMitra</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand" href="index.html">🌾 KrishiMitra AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="advisor.html">Crop Advisor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="disease.html">Disease Detection</a></li>
-                    <li class="nav-item"><a class="nav-link" href="weather.html">Weather</a></li>
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">🌿 Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">📸 Disease</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">⛅ Weather</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="fertilizer.html">🌱 Fertilizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schemes.html">🏛️ Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="market.html">💰 Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">🎙️ Voice Chat</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow border-0">
-                    <div class="card-body p-5">
-                        <h2 class="text-success fw-bold text-center mb-4">🌱 Fertilizer Recommendation</h2>
-                        <p class="text-muted text-center mb-4">Select your crop and soil type to get AI-driven fertilizer suggestions and application timings.</p>
-                        
-                        <form id="fertilizerForm">
-                            <div class="mb-3">
-                                <label for="crop" class="form-label fw-semibold">Crop Name</label>
-                                <input type="text" class="form-control form-control-lg" id="crop" placeholder="e.g., Wheat, Rice, Cotton" required>
-                            </div>
-                            <div class="mb-4">
-                                <label for="soilType" class="form-label fw-semibold">Soil Type</label>
-                                <select class="form-select form-select-lg" id="soilType" required>
-                                    <option value="" disabled selected>Select Soil Type...</option>
-                                    <option value="Alluvial">Alluvial Soil</option>
-                                    <option value="Black">Black Soil</option>
-                                    <option value="Red">Red Soil</option>
-                                    <option value="Laterite">Laterite Soil</option>
-                                    <option value="Sandy">Sandy Soil</option>
-                                    <option value="Clay">Clay Soil</option>
-                                </select>
-                            </div>
-                            <div class="d-grid">
-                                <button type="submit" class="btn btn-success btn-lg rounded-pill" id="submitBtn">Get Recommendation</button>
-                            </div>
-                        </form>
+    <div class="container" style="position:relative;z-index:1;">
+        <div class="page-header">
+            <div class="section-badge">Smart Nutrition</div>
+            <h1>🌱 Fertilizer Recommendation</h1>
+            <p>Get AI-powered fertilizer guidance based on your crop type and soil composition.</p>
+        </div>
 
-                        <!-- Results Section -->
-                        <div id="resultSection" class="mt-5 d-none">
-                            <h4 class="fw-bold text-primary mb-3">AI Recommendation:</h4>
-                            <div class="p-4 bg-light rounded" id="aiResponse" style="white-space: pre-line;">
-                                <!-- AI output goes here -->
-                            </div>
+        <div class="row justify-content-center pb-5">
+            <div class="col-lg-7">
+                <div class="glass-card p-4 p-md-5">
+                    <form id="fertilizerForm">
+                        <div class="mb-4">
+                            <label class="form-label">🌾 Crop Name</label>
+                            <input type="text" class="form-control" id="crop" placeholder="e.g., Wheat, Rice, Cotton, Sugarcane" required>
                         </div>
-                        
-                        <!-- Loading Spinner -->
-                        <div id="loading" class="text-center mt-4 d-none">
-                            <div class="spinner-border text-success" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-2 text-muted">Analyzing the best fertilizers for your soil...</p>
+                        <div class="mb-5">
+                            <label class="form-label">🏔️ Soil Type</label>
+                            <select class="form-select" id="soilType" required>
+                                <option value="" disabled selected>Select your soil type...</option>
+                                <option value="Alluvial">Alluvial Soil (Domat Mitti)</option>
+                                <option value="Black">Black Soil (Kali Mitti)</option>
+                                <option value="Red">Red Soil (Lal Mitti)</option>
+                                <option value="Laterite">Laterite Soil</option>
+                                <option value="Sandy">Sandy Soil (Reti Mitti)</option>
+                                <option value="Clay">Clay Soil (Chikni Mitti)</option>
+                            </select>
                         </div>
+                        <button type="submit" class="btn-primary-custom" id="submitBtn">🌱 Get Recommendation</button>
+                    </form>
+
+                    <div id="loading" class="text-center mt-4 d-none">
+                        <div class="spinner-border" role="status"></div>
+                        <p class="mt-2" style="color:var(--text-muted);">Analyzing best fertilizers for your soil...</p>
+                    </div>
+                    <div id="resultSection" class="d-none">
+                        <div class="result-box" id="aiResponse"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="bg-dark text-center">
+        <div class="container">
+            <p class="mb-0" style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 KrishiMitra AI 🌾</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -87,35 +82,24 @@
             e.preventDefault();
             const crop = document.getElementById('crop').value;
             const soilType = document.getElementById('soilType').value;
-
             const submitBtn = document.getElementById('submitBtn');
             const loading = document.getElementById('loading');
             const resultSection = document.getElementById('resultSection');
             const aiResponse = document.getElementById('aiResponse');
-
-            // UI states
             submitBtn.disabled = true;
             resultSection.classList.add('d-none');
             loading.classList.remove('d-none');
-
             try {
                 const response = await fetch('/api/fertilizer-recommend', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ crop, soilType })
                 });
-                
                 const data = await response.json();
-                
-                if(response.ok) {
-                    aiResponse.innerHTML = data.recommendation.replace(/\n/g, '<br>');
-                    resultSection.classList.remove('d-none');
-                } else {
-                    aiResponse.innerHTML = `<span class="text-danger">Error: ${data.error}</span>`;
-                    resultSection.classList.remove('d-none');
-                }
-            } catch (error) {
-                aiResponse.innerHTML = `<span class="text-danger">Failed to connect to the server. Is it running?</span>`;
+                aiResponse.innerHTML = response.ok ? data.recommendation.replace(/\n/g, '<br>') : `<span style="color:#EF9A9A">Error: ${data.error}</span>`;
+                resultSection.classList.remove('d-none');
+            } catch (err) {
+                aiResponse.innerHTML = `<span style="color:#EF9A9A">Failed to connect to server!</span>`;
                 resultSection.classList.remove('d-none');
             } finally {
                 submitBtn.disabled = false;

@@ -6,115 +6,100 @@
     <title>Dashboard - KrishiMitra AI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
+            <a class="navbar-brand" href="index.html">🌾 KrishiMitra AI</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="advisor.html">Crop Advisor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="disease.html">Disease Detection</a>
-                    </li>
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="dashboard.html">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">🌿 Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">📸 Disease</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">⛅ Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="fertilizer.html">🌱 Fertilizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schemes.html">🏛️ Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="market.html">💰 Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">🎙️ Voice Chat</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container py-5">
-        <h2 class="fw-bold mb-4">Welcome to Your Dashboard, Farmer!</h2>
+    <div class="container" style="padding: 50px 16px; position:relative; z-index:1;">
+        <!-- Welcome Header -->
+        <div class="mb-5">
+            <div class="section-badge">Farmer Dashboard</div>
+            <h1 class="section-title mt-2">नमस्ते, किसान भाई! 👨‍🌾</h1>
+            <p style="color:var(--text-muted);">What would you like to do today?</p>
+        </div>
+
+        <!-- Dashboard Grid -->
         <div class="row g-4">
-            <div class="col-md-3">
-                <div class="card h-100 shadow-sm border-0 bg-white">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">🌤️ Current Weather</h5>
-                        <p class="card-text" id="weatherWidget">Loading weather...</p>
-                        <a href="weather.html" class="btn btn-sm btn-outline-success">View Details</a>
-                    </div>
-                </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="advisor.html" class="dash-card green">
+                    <span class="dash-card-icon">🌿</span>
+                    <div class="dash-card-title">AI Crop Advisor</div>
+                    <div class="dash-card-desc">Sowing, irrigation & harvesting tips</div>
+                </a>
             </div>
-            <div class="col-md-9">
-                <div class="row g-4">
-                    <div class="col-md-4">
-                        <a href="advisor.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-success text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🌿</h1>
-                                    <h5 class="card-title fw-bold">Crop Advisor</h5>
-                                </div>
-                            </div>
-                        </a>
+            <div class="col-lg-4 col-md-6">
+                <a href="disease.html" class="dash-card amber">
+                    <span class="dash-card-icon">📸</span>
+                    <div class="dash-card-title">Disease Detection</div>
+                    <div class="dash-card-desc">Upload photo for AI diagnosis</div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="weather.html" class="dash-card blue">
+                    <span class="dash-card-icon">⛅</span>
+                    <div class="dash-card-title">Weather Updates</div>
+                    <div class="dash-card-desc">Check your local weather conditions</div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="fertilizer.html" class="dash-card teal">
+                    <span class="dash-card-icon">🌱</span>
+                    <div class="dash-card-title">Fertilizer Guide</div>
+                    <div class="dash-card-desc">Best fertilizers for your soil & crop</div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="schemes.html" class="dash-card orange">
+                    <span class="dash-card-icon">🏛️</span>
+                    <div class="dash-card-title">Govt Schemes</div>
+                    <div class="dash-card-desc">PM-KISAN, PMFBY & more subsidies</div>
+                </a>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <a href="market.html" class="dash-card green">
+                    <span class="dash-card-icon">💰</span>
+                    <div class="dash-card-title">Market Prices</div>
+                    <div class="dash-card-desc">Live mandi rates across India</div>
+                </a>
+            </div>
+            <div class="col-lg-12 col-md-6">
+                <a href="chat.html" class="dash-card purple" style="display:flex;align-items:center;gap:20px;flex-direction:row;">
+                    <span class="dash-card-icon" style="margin-bottom:0;font-size:3rem;">🎙️</span>
+                    <div>
+                        <div class="dash-card-title" style="font-size:1.1rem;">Hindi Voice Assistant</div>
+                        <div class="dash-card-desc">बोलकर अपना सवाल पूछें — हिंदी में जवाब पाएं</div>
                     </div>
-                    <div class="col-md-4">
-                        <a href="disease.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-primary text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">📸</h1>
-                                    <h5 class="card-title fw-bold">Scan Disease</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4">
-                        <a href="market.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-warning text-dark">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">💰</h1>
-                                    <h5 class="card-title fw-bold">Market Prices</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="fertilizer.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-info text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🌱</h1>
-                                    <h5 class="card-title fw-bold">Fertilizer Advice</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="schemes.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card bg-secondary text-white">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🏛️</h1>
-                                    <h5 class="card-title fw-bold">Govt Schemes</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <a href="chat.html" class="text-decoration-none">
-                            <div class="card h-100 shadow-sm border-0 feature-card" style="background-color: #6f42c1; color: white;">
-                                <div class="card-body text-center d-flex flex-column justify-content-center">
-                                    <h1 class="mb-3">🎙️</h1>
-                                    <h5 class="card-title fw-bold">Voice Assistant</h5>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
+
+    <footer class="bg-dark text-center mt-5">
+        <div class="container">
+            <p class="mb-1 fw-bold">🌾 KrishiMitra AI</p>
+            <p class="mb-0" style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 KrishiMitra AI. Built for Farmers of India 🇮🇳</p>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

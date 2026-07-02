@@ -3,119 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Updates - KrishiMitra</title>
+    <title>Weather - KrishiMitra</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <a class="navbar-brand" href="index.html">🌾 KrishiMitra AI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="dashboard.html">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="advisor.html">Crop Advisor</a></li>
-                    <li class="nav-item"><a class="nav-link" href="disease.html">Disease Detection</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="weather.html">Weather</a></li>
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item"><a class="nav-link" href="index.html">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">🌿 Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">📸 Disease</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="weather.html">⛅ Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="fertilizer.html">🌱 Fertilizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schemes.html">🏛️ Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="market.html">💰 Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">🎙️ Voice Chat</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow border-0">
-                    <div class="card-body p-5">
-                        <h2 class="text-success fw-bold text-center mb-4">⛅ Weather Updates</h2>
-                        <p class="text-muted text-center mb-4">Check current weather conditions for better farm planning.</p>
-                        
-                        <form id="weatherForm">
-                            <div class="input-group mb-3">
-                                <input type="text" class="form-control form-control-lg" id="cityInput" placeholder="Enter your city/village name" required>
-                                <button class="btn btn-success" type="submit" id="searchBtn">Search</button>
-                            </div>
-                        </form>
+    <div class="container" style="position:relative;z-index:1;">
+        <div class="page-header">
+            <div class="section-badge">Live Data</div>
+            <h1>⛅ Weather Updates</h1>
+            <p>Check current weather conditions for better farm planning and irrigation scheduling.</p>
+        </div>
 
-                        <!-- Weather Results -->
-                        <div id="weatherResult" class="mt-4 text-center d-none">
-                            <h3 class="fw-bold" id="cityName"></h3>
-                            <div class="display-1 text-primary fw-bold" id="temperature">--°C</div>
-                            <h5 class="text-muted mt-2" id="description">--</h5>
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <p class="mb-1 text-muted">Humidity</p>
-                                    <h5 class="fw-bold" id="humidity">--%</h5>
+        <div class="row justify-content-center pb-5">
+            <div class="col-lg-6">
+                <div class="glass-card p-4 p-md-5">
+                    <form id="weatherForm">
+                        <div class="input-group mb-4" style="gap:10px;">
+                            <input type="text" class="form-control" id="cityInput" placeholder="Enter city or village name..." required style="border-radius:12px!important;">
+                            <button class="btn-primary-custom" type="submit" id="searchBtn" style="width:auto;padding:12px 28px;white-space:nowrap;">Search</button>
+                        </div>
+                    </form>
+
+                    <!-- Loading -->
+                    <div id="loading" class="text-center mt-3 d-none">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+
+                    <!-- Error -->
+                    <div id="errorMsg" class="d-none" style="color:#EF9A9A;text-align:center;margin-top:12px;"></div>
+
+                    <!-- Weather Result -->
+                    <div id="weatherResult" class="mt-4 d-none text-center">
+                        <p style="color:var(--text-muted);font-size:0.85rem;text-transform:uppercase;letter-spacing:1px;">Current Weather</p>
+                        <h2 class="fw-bold mb-1" id="cityName">--</h2>
+                        <div class="weather-temp mt-3 mb-2" id="temperature">--°C</div>
+                        <h5 style="color:var(--text-muted);text-transform:capitalize;" id="description">--</h5>
+
+                        <div class="row g-3 mt-4">
+                            <div class="col-6">
+                                <div class="weather-stat-card">
+                                    <div style="font-size:1.8rem;">💧</div>
+                                    <p style="color:var(--text-muted);font-size:0.8rem;margin:4px 0;">Humidity</p>
+                                    <h5 class="fw-bold mb-0" id="humidity">--%</h5>
                                 </div>
-                                <div class="col-6">
-                                    <p class="mb-1 text-muted">Wind Speed</p>
-                                    <h5 class="fw-bold" id="wind">-- m/s</h5>
+                            </div>
+                            <div class="col-6">
+                                <div class="weather-stat-card">
+                                    <div style="font-size:1.8rem;">💨</div>
+                                    <p style="color:var(--text-muted);font-size:0.8rem;margin:4px 0;">Wind Speed</p>
+                                    <h5 class="fw-bold mb-0" id="wind">-- m/s</h5>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Loading Spinner -->
-                        <div id="loading" class="text-center mt-4 d-none">
-                            <div class="spinner-border text-success" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
+                        <div class="result-box mt-4 text-start" id="farmingTip">
+                            🌾 <strong>Farming Tip:</strong> Loading recommendation...
                         </div>
-                        
-                        <!-- Error Message -->
-                        <div id="errorMsg" class="text-danger text-center mt-3 d-none"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <footer class="bg-dark text-center">
+        <div class="container">
+            <p class="mb-0" style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 KrishiMitra AI 🌾</p>
+        </div>
+    </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.getElementById('weatherForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const city = document.getElementById('cityInput').value;
-
             const searchBtn = document.getElementById('searchBtn');
             const loading = document.getElementById('loading');
             const weatherResult = document.getElementById('weatherResult');
             const errorMsg = document.getElementById('errorMsg');
-
             searchBtn.disabled = true;
             weatherResult.classList.add('d-none');
             errorMsg.classList.add('d-none');
             loading.classList.remove('d-none');
-
             try {
                 const response = await fetch('/api/weather', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ location: city })
                 });
-                
                 const data = await response.json();
-                
-                if(response.ok && data.weather) {
-                    document.getElementById('cityName').textContent = data.weather.name + ", " + data.weather.sys.country;
-                    document.getElementById('temperature').textContent = Math.round(data.weather.main.temp) + "°C";
-                    document.getElementById('description').textContent = data.weather.weather[0].description.toUpperCase();
-                    document.getElementById('humidity').textContent = data.weather.main.humidity + "%";
-                    document.getElementById('wind').textContent = data.weather.wind.speed + " m/s";
-                    
+                if (response.ok && data.weather) {
+                    const w = data.weather;
+                    document.getElementById('cityName').textContent = w.name + ', ' + w.sys.country;
+                    document.getElementById('temperature').textContent = Math.round(w.main.temp) + '°C';
+                    document.getElementById('description').textContent = w.weather[0].description;
+                    document.getElementById('humidity').textContent = w.main.humidity + '%';
+                    document.getElementById('wind').textContent = w.wind.speed + ' m/s';
+                    const temp = Math.round(w.main.temp);
+                    let tip = temp > 35 ? '🌡️ Very hot today! Water your crops early morning or evening to avoid evaporation.' :
+                              temp < 15 ? '❄️ Cold weather! Protect sensitive crops with covering at night.' :
+                              '✅ Good weather for fieldwork! Ideal conditions for most crops.';
+                    document.getElementById('farmingTip').innerHTML = '🌾 <strong>Farming Tip:</strong> ' + tip;
                     weatherResult.classList.remove('d-none');
                 } else {
-                    errorMsg.textContent = "Error: " + (data.error || "City not found.");
+                    errorMsg.textContent = 'Error: ' + (data.error || 'City not found.');
                     errorMsg.classList.remove('d-none');
                 }
-            } catch (error) {
-                errorMsg.textContent = "Failed to connect to the server.";
+            } catch (err) {
+                errorMsg.textContent = 'Failed to connect to server!';
                 errorMsg.classList.remove('d-none');
             } finally {
                 searchBtn.disabled = false;

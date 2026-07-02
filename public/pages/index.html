@@ -4,104 +4,170 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KrishiMitra AI - Smart Farmer Assistant</title>
-    <!-- Bootstrap CSS -->
+    <meta name="description" content="KrishiMitra AI - AI-powered platform for Indian farmers. Get crop advice, disease detection, weather updates, and market prices.">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="index.html">🌾 KrishiMitra AI</a>
+            <a class="navbar-brand" href="index.html">🌾 KrishiMitra AI</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="dashboard.html">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="advisor.html">Crop Advisor</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="disease.html">Disease Detection</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="weather.html">Weather</a>
-                    </li>
+                <ul class="navbar-nav ms-auto gap-1">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">🏠 Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="dashboard.html">📊 Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="advisor.html">🌿 Crop Advisor</a></li>
+                    <li class="nav-item"><a class="nav-link" href="disease.html">📸 Disease</a></li>
+                    <li class="nav-item"><a class="nav-link" href="weather.html">⛅ Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="fertilizer.html">🌱 Fertilizer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="schemes.html">🏛️ Schemes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="market.html">💰 Market</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.html">🎙️ Voice Chat</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-section text-center text-white d-flex align-items-center justify-content-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold mb-4">Empowering Farmers with AI</h1>
-            <p class="lead mb-5">Get instant crop advice, disease detection, weather updates, and market prices all in one place.</p>
-            <a href="dashboard.html" class="btn btn-light btn-lg rounded-pill px-5 py-3 fw-bold text-success shadow">Get Started Now</a>
-        </div>
-    </section>
+    <section class="hero-section">
+        <div class="float-element float-1"></div>
+        <div class="float-element float-2"></div>
+        <div class="container text-center" style="position:relative;z-index:3;">
+            <div class="hero-badge">🇮🇳 Made for Indian Farmers</div>
+            <h1 class="hero-title">
+                Smart Farming <br>with <span class="highlight">AI Power</span>
+            </h1>
+            <p class="hero-desc">
+                AI-powered guidance for crop advice, disease detection, weather alerts, fertilizer tips, and government schemes — all in one place.
+            </p>
+            <a href="dashboard.html" class="hero-btn">
+                🚀 Start Farming Smarter &rarr;
+            </a>
 
-    <!-- Features Section -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center fw-bold mb-5 text-success">Our Services</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                🌿
-                            </div>
-                            <h5 class="card-title fw-bold">AI Crop Advisor</h5>
-                            <p class="card-text text-muted">Get personalized advice on sowing, irrigation, and harvesting based on your crop and location.</p>
-                        </div>
-                    </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <h3>7+</h3>
+                    <p>AI Features</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                📸
-                            </div>
-                            <h5 class="card-title fw-bold">Disease Detection</h5>
-                            <p class="card-text text-muted">Upload a photo of your plant and our AI will identify diseases and suggest treatments.</p>
-                        </div>
-                    </div>
+                <div class="hero-stat">
+                    <h3>100%</h3>
+                    <p>Free to Use</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm feature-card">
-                        <div class="card-body text-center p-4">
-                            <div class="icon-circle bg-success text-white mb-3">
-                                ⛅
-                            </div>
-                            <h5 class="card-title fw-bold">Weather Alerts</h5>
-                            <p class="card-text text-muted">Stay ahead with real-time weather updates and irrigation recommendations.</p>
-                        </div>
-                    </div>
+                <div class="hero-stat">
+                    <h3>Hindi</h3>
+                    <p>Voice Support</p>
+                </div>
+                <div class="hero-stat">
+                    <h3>24/7</h3>
+                    <p>AI Assistant</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <div class="section-badge">Our Services</div>
+                <h2 class="section-title">Everything a Farmer Needs</h2>
+                <p class="section-desc">From seeds to market — KrishiMitra AI guides you at every step of farming.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 animate-in">
+                    <a href="advisor.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(76,175,80,0.2);">🌿</div>
+                            <h5 class="fw-bold mb-2">AI Crop Advisor</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">Get personalized sowing, irrigation, and harvesting advice based on your crop, location and season.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-in" style="transition-delay:0.1s">
+                    <a href="disease.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(239,83,80,0.2);">📸</div>
+                            <h5 class="fw-bold mb-2">Disease Detection</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">Upload a photo of your plant leaf. AI will identify the disease and suggest organic & chemical treatments.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-in" style="transition-delay:0.2s">
+                    <a href="weather.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(100,181,246,0.2);">⛅</div>
+                            <h5 class="fw-bold mb-2">Weather Updates</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">Get real-time weather conditions for your village to plan irrigation and field activities smartly.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-in" style="transition-delay:0.3s">
+                    <a href="fertilizer.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(129,199,132,0.2);">🌱</div>
+                            <h5 class="fw-bold mb-2">Fertilizer Guide</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">AI-driven fertilizer recommendations (organic + synthetic) with application schedule for your soil type.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-in" style="transition-delay:0.4s">
+                    <a href="schemes.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(249,168,37,0.2);">🏛️</div>
+                            <h5 class="fw-bold mb-2">Govt Scheme Finder</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">Find PM-KISAN, PMFBY, and state-level subsidies tailored to your profile with document checklists.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-lg-4 col-md-6 animate-in" style="transition-delay:0.5s">
+                    <a href="chat.html" class="feature-card-link">
+                        <div class="glass-card p-4 h-100">
+                            <div class="feature-icon" style="background: rgba(206,147,216,0.2);">🎙️</div>
+                            <h5 class="fw-bold mb-2">Hindi Voice Assistant</h5>
+                            <p style="color:var(--text-muted);font-size:0.9rem;line-height:1.7;">Speak your farming questions in Hindi. AI understands and speaks the answer back to you!</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section" style="padding-top:0;">
+        <div class="container">
+            <div class="glass-card p-5 text-center" style="background: linear-gradient(135deg, rgba(46,125,50,0.3), rgba(249,168,37,0.1));">
+                <h2 class="fw-bold mb-3" style="font-family:Poppins;">Ready to Farm Smarter? 🚜</h2>
+                <p style="color:var(--text-muted);" class="mb-4">Join thousands of farmers already using KrishiMitra AI to get better yields.</p>
+                <a href="dashboard.html" class="hero-btn" style="display:inline-block;">Go to Dashboard &rarr;</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-auto">
-        <div class="container text-center">
-            <p class="mb-0">&copy; 2026 KrishiMitra AI. Built for Farmers.</p>
+    <footer class="bg-dark text-center">
+        <div class="container">
+            <p class="mb-1 fw-bold fs-5">🌾 KrishiMitra AI</p>
+            <p class="mb-0" style="color:var(--text-muted);font-size:0.85rem;">&copy; 2026 KrishiMitra AI. Built with ❤️ for the Farmers of India 🇮🇳</p>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/main.js"></script>
+    <script>
+        // Animate on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 100);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
